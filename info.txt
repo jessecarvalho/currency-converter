@@ -1,2 +1,0 @@
-API -> 4861d10cb9f5243eb1826e4a
-Requisição -> https://v6.exchangerate-api.com/v6/4861d10cb9f5243eb1826e4a/latest/USD

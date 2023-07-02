@@ -121,7 +121,7 @@ export default defineComponent ({
 			}
 		}
 	},
-	directives: { money3: Money3Directive },
+	directives: { money3: Money3Directive.value },
 	computed: {
 		convert_from_computed: {
 			get(): string {

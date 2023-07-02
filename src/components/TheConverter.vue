@@ -2,7 +2,7 @@
   <div id="converter">
     <div class="items">
       <div>
-        <input type="text" placeholder="Value" v-model="value_from_computed" />
+				<input v-model.lazy="value_from_computed" v-money3="moneyMaskConfig" />
       </div>
       <div>
         <select id="convert_from" name="convert_from" v-model="convert_from_computed">
@@ -92,6 +92,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
+import { Money3Directive } from "v-money3"
 
 export default defineComponent ({
 	data() {
@@ -99,10 +100,28 @@ export default defineComponent ({
 			convert_from : "",
 			convert_to : "",
 			value_from : 0,
+			value_from_formated : "",
 			value_to : 0,
 			value_to_formated : "0,00",
+			moneyMaskConfig: {
+				masked: false,
+				prefix: "",
+				suffix: "",
+				thousands: ".",
+				decimal: ",",
+				precision: 2,
+				disableNegative: true,
+				disabled: false,
+				min: null,
+				max: null,
+				allowBlank: false,
+				minimumNumberOfCharacters: 0,
+				shouldRound: true,
+				focusOnRight: false,
+			}
 		}
 	},
+	directives: { money3: Money3Directive },
 	computed: {
 		convert_from_computed: {
 			get(): string {
@@ -126,6 +145,14 @@ export default defineComponent ({
 			},
 			set(newValue: number) {
 				this.value_from = newValue
+			}
+		},
+		value_from_formated_computed: {
+			get(): string {
+				return this.value_from_formated
+			},
+			set(newValue: string) {
+				this.value_from_formated = newValue
 			}
 		},
 		value_to_computed: {
@@ -157,15 +184,17 @@ export default defineComponent ({
 			})
 			const data = await response.json()
 			const currencies = data.conversion_rates
-			var converted: string = (currencies[this.convert_to] * this.value_from_computed).toString()
-			this.value_to_formated = this.convert_to + " " + converted.replace(".",",")
+			var converted: number = (currencies[this.convert_to] * parseFloat(this.value_from_formated))
+			this.value_to_formated = this.convert_to + " " + converted.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2})
 		},
 		convertRequest() {
-			if (this.convert_from !== "" || this.convert_to !== "" || this.value_from !== 0) {
+			this.value_from_formated = this.value_from.toString().replace(".", "").replace(",", ".")
+			if (this.convert_from !== "" && this.convert_to !== "" && this.value_from !== 0) {
+				this.value_from_formated = this.value_from.toString().replace(".", "").replace(",", ".")
 				this.postData()
 			} else {
 				const modal = document.querySelector("#modal")
-				modal?.classList.remove("hidden")
+				modal?.classList.add("opened")
 			}
 		}	
 	},

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
-import TheConverter from '../components/TheConverter.vue'
-import TheFooter from '../components/TheFooter.vue'
+import TheWelcome from "../components/TheWelcome.vue"
+import TheConverter from "../components/TheConverter.vue"
+import TheModal from "../components/TheModal.vue"
 </script>
 
 <template>
   <main>
     <the-welcome />
     <the-converter />
-    <the-footer />
+    <the-modal />
   </main>
 </template>
